@@ -1,4 +1,4 @@
 # nat
 Nieuw Amsterdam Peil
 
-Measuring water level in the Maas.:
+A minute to minute measure of the Maas river's level for Rotterdam.  
