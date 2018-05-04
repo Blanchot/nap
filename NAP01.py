@@ -7,12 +7,27 @@
 # Changed delimiter from ',' to ';'
 # It looks like I can access what I need with this: my_list[29][4]
 
+'''
+4 May 2018 old link stopped working
+This is the link to the info:
+https://waterinfo.rws.nl/#!/details/publiek/waterhoogte-t-o-v-nap/Rotterdam(ROTT)/Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm
+  
+This is the link to the updated .csv file:
+https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3
+
+'''
 import csv
 import requests
 import time
 from microdotphat import write_string, clear, show
 
+'''
+Old url
 csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=1313&timehorizon=-6,3'
+'''
+
+#New url
+csv_url = https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3
 
 updatetime = ''
 prevlevel = 0
