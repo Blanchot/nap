@@ -27,7 +27,7 @@ csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte
 '''
 
 #New url
-csv_url = https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3
+csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3'
 
 updatetime = ''
 prevlevel = 0
