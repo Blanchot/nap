@@ -6,6 +6,7 @@
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
 # Changed delimiter from ',' to ';'
 # It looks like I can access what I need with this: my_list[29][4]
+# CHANGE: trying my_list[28][4]
 
 '''
 4 May 2018 old link stopped working
@@ -39,14 +40,15 @@ while True:
 			decoded_content = download.content.decode('utf-8')
 			cr = csv.reader(decoded_content.splitlines(), delimiter=';')
 			my_list = list(cr)
-		if my_list[29][1] != updatetime and my_list[29][4] != '': #test time changed and level not empty
-			difflevel = int(my_list[29][4]) - prevlevel #new code to compare and show rise or fall of level
-			display = (my_list[29][4] + str('%+d' % difflevel))
+		#if my_list[29][1] != updatetime and my_list[29][4] != '': #test time changed and level not empty
+		if my_list[28][1] != updatetime and my_list[28][4] != '': #test time changed and level not empty
+			difflevel = int(my_list[28][4]) - prevlevel #new code to compare and show rise or fall of level
+			display = (my_list[28][4] + str('%+d' % difflevel))
 			clear()
 			write_string(display, kerning=False)
 			show()
-			updatetime = my_list[29][1]
-			prevlevel = int(my_list[29][4]) #new code to compare and show rise or fall of level
+			updatetime = my_list[28][1]
+			prevlevel = int(my_list[28][4]) #new code to compare and show rise or fall of level
 		time.sleep(300) # waits 5 minutes
 	except IndexError:
 		clear()
