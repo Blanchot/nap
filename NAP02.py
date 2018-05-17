@@ -1,17 +1,8 @@
-# NAP_2 b1
+# NAP_2 b2
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
 # Changed delimiter from ',' to ';'
-# It looks like I can access what I need with this: my_list[28][4]
-
-'''
-This is the link to the info:
-https://waterinfo.rws.nl/#!/details/publiek/waterhoogte-t-o-v-nap/Rotterdam(ROTT)/Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm
-  
-This is the link to the .csv file:
-https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3
-'''
 
 import csv
 import requests
@@ -38,7 +29,30 @@ def getNap():
     print('Error')
 
 
-def currTimeStr():
+def noPhat():
+  global prevLevel
+  while True:
+    tijd = time.localtime() #create a struct_time object
+    if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
+      currTime = time.asctime()[11:16] #if yes create an hour and minute string using .asctime
+      currTime = currTime +':00' #add the zeros
+      #print(currTime)
+      
+      getNap() #get and set current nap_list
+      # walk through it searching match with currTime nap_list[i][1]
+      # could also try for i in nap_list:
+      for i in range(len(nap_list)):
+        if nap_list[i][1] == currTime:
+          currLevel = int(nap_list[i][5]) #currLevel is an int
+          #print(currLevel)
+          diffLevel = currLevel - prevLevel
+          #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
+          print(currTime, str(currLevel),str('%+d' % diffLevel))
+          prevLevel = currLevel
+      time.sleep(65)
+    time.sleep(5)
+
+def withPhat():
   global prevLevel
   while True:
     tijd = time.localtime() #create a struct_time object
@@ -54,12 +68,13 @@ def currTimeStr():
         if nap_list[i][1] == currTime:
           currLevel = int(nap_list[i][5])
           print(currLevel)
-          print(currLevel - prevLevel)
+          diffLevel = currLevel - prevLevel
+          print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
           prevLevel = currLevel
       time.sleep(65)
     time.sleep(5)
 
-currTimeStr()
+noPhat()
 
 '''
 while True:
