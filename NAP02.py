@@ -1,4 +1,4 @@
-# NAP_2 b2
+# NAP_2 b3 (added Phat display code)
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -26,7 +26,8 @@ def getNap():
       nap_list = list(cr)
       return nap_list
   except IndexError:
-    print('Error')
+    # Add Phat Error messages here
+    print('Index Error')
 
 
 def noPhat():
@@ -36,20 +37,18 @@ def noPhat():
     if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
       currTime = time.asctime()[11:16] #if yes create an hour and minute string using .asctime
       currTime = currTime +':00' #add the zeros
-      #print(currTime)
       
       getNap() #get and set current nap_list
       # walk through it searching match with currTime nap_list[i][1]
-      # could also try for i in nap_list:
+      # for i in nap_list: doesn't work in this case (because I need the index number?):
       for i in range(len(nap_list)):
         if nap_list[i][1] == currTime:
           currLevel = int(nap_list[i][5]) #currLevel is an int
-          #print(currLevel)
           diffLevel = currLevel - prevLevel
           #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
           print(currTime, str(currLevel),str('%+d' % diffLevel))
           prevLevel = currLevel
-      time.sleep(65)
+      time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
 
 def withPhat():
@@ -59,22 +58,27 @@ def withPhat():
     if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
       currTime = time.asctime()[11:16] #if yes create an hour and minute string using .asctime
       currTime = currTime +':00' #add the zeros
-      print(currTime)
       
       getNap() #get and set current nap_list
       # walk through it searching match with currTime nap_list[i][1]
-      # could also try for i in nap_list:
+      # for i in nap_list: doesn't work in this case (because I need the index number?)
       for i in range(len(nap_list)):
         if nap_list[i][1] == currTime:
-          currLevel = int(nap_list[i][5])
-          print(currLevel)
+          currLevel = int(nap_list[i][5]) #currLevel is an int
           diffLevel = currLevel - prevLevel
-          print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
+          #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
+          print(currTime, str(currLevel),str('%+d' % diffLevel))
           prevLevel = currLevel
-      time.sleep(65)
+          # Microdot Phat code follows
+          display = str(currLevel) + str('%+d' % diffLevel)
+          clear()
+          write_string(display, kerning=False)
+          show()
+      time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
 
-noPhat()
+#noPhat()
+withPhat()
 
 '''
 while True:
