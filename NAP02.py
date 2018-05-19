@@ -1,4 +1,4 @@
-# NAP_2 b4 (added exceptions: IndexError and ConnectionError)
+# NAP_2 b5 (test to distinguish microdot from blinkt code)
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -7,7 +7,9 @@
 import csv
 import requests
 import time
-from microdotphat import write_string, clear, show
+import blinkt
+import microdotphat
+#from microdotphat import write_string, clear, show
 
 csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3'
 
@@ -26,14 +28,14 @@ def getNap():
       nap_list = list(cr)
       return nap_list
   except IndexError:
-    clear()
-    write_string('IndErr', kerning=False)
-    show()
+    microdotphat.clear()
+    microdotphat.write_string('IndErr', kerning=False)
+    microdotphat.show()
     print('Index Error')
   except ConnectionError:
-    clear()
-    write_string('ConErr', kerning=False)
-    show()
+    microdotphat.clear()
+    microdotphat.write_string('ConErr', kerning=False)
+    microdotphat.show()
     print('Connection Error')
 
 def noPhat():
@@ -77,9 +79,9 @@ def withPhat():
           prevLevel = currLevel
           # Microdot Phat code follows
           display = str(currLevel) + str('%+d' % diffLevel)
-          clear()
-          write_string(display, kerning=False)
-          show()
+          microdotphat.clear()
+          microdotphat.write_string(display, kerning=False)
+          microdotphat.show()
       time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
 
