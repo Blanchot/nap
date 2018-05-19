@@ -1,4 +1,4 @@
-# NAP_2 b5 (test to distinguish microdot from blinkt code)
+# NAP_2 b6 (uses nap_list to find prevLevel instead of storing it)
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -14,7 +14,7 @@ import microdotphat
 csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3'
 
 
-prevLevel = 0
+#prevLevel = 0 #can remove next
 nap_list = []
 interval_List = (0,10,20,30,40,50)
 
@@ -39,7 +39,7 @@ def getNap():
     print('Connection Error')
 
 def noPhat():
-  global prevLevel
+  # global prevLevel #can remove next
   while True:
     tijd = time.localtime() #create a struct_time object
     if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
@@ -52,15 +52,16 @@ def noPhat():
       for i in range(len(nap_list)):
         if nap_list[i][1] == currTime:
           currLevel = int(nap_list[i][5]) #currLevel is an int
+          prevLevel = int(nap_list[i-1][5])
           diffLevel = currLevel - prevLevel
           #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
           print(currTime, str(currLevel),str('%+d' % diffLevel))
-          prevLevel = currLevel
+          #prevLevel = currLevel
       time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
 
 def withPhat():
-  global prevLevel
+  # global prevLevel #can remove next
   while True:
     tijd = time.localtime() #create a struct_time object
     if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
@@ -73,10 +74,11 @@ def withPhat():
       for i in range(len(nap_list)):
         if nap_list[i][1] == currTime:
           currLevel = int(nap_list[i][5]) #currLevel is an int
+          prevLevel = int(nap_list[i-1][5])
           diffLevel = currLevel - prevLevel
           #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
           print(currTime, str(currLevel),str('%+d' % diffLevel))
-          prevLevel = currLevel
+          #prevLevel = currLevel
           # Microdot Phat code follows
           display = str(currLevel) + str('%+d' % diffLevel)
           microdotphat.clear()
