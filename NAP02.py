@@ -1,4 +1,4 @@
-# NAP_2 b3 (added Phat display code)
+# NAP_2 b4 (added exceptions: IndexError and ConnectionError)
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -26,9 +26,15 @@ def getNap():
       nap_list = list(cr)
       return nap_list
   except IndexError:
-    # Add Phat Error messages here
+    clear()
+    write_string('IndErr', kerning=False)
+    show()
     print('Index Error')
-
+  except ConnectionError:
+    clear()
+    write_string('ConErr', kerning=False)
+    show()
+    print('Connection Error')
 
 def noPhat():
   global prevLevel
