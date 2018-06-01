@@ -93,9 +93,9 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
   for i in levelDiffs:
     if i > 1:
       levelLightsFull.append('+')
-    elif i < 1:
+    elif i < -1:
       levelLightsFull.append('-')
-    elif i == 0 or i == 1:
+    elif i == 0 or i == 1 or i == -1:
       levelLightsFull.append('=')
   
   print(levelLightsFull)
