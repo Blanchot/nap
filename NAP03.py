@@ -1,4 +1,4 @@
-# NAP_3 b1 (first test incorporating blinkt lights)
+# NAP_3 b3 (first test incorporating blinkt lights)
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -16,6 +16,13 @@ csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte
 nap_list = []
 nextLevels = []
 interval_List = (0,10,20,30,40,50)
+
+# for Blinkt brightness, rgb tuples and pixel list
+set_brightness(0.04)
+rise = (0,8,0)
+fall = (32,0,0)
+same = (0,0,192)
+pixels = (0,1,2,3,4,5,6,7)
 
 def getNap():
   global nap_list
@@ -49,9 +56,10 @@ def lookAhead(nap_list,currTime):
       #Todo: catch error if prev level in nap_list (Verwachting) is empty
       #Verwachting column is zeroed when an actual value is measured (Meting)
       diffLevel = currLevel - prevLevel
-      print(i)
-      print(currTime, str(currLevel),str('%+d' % diffLevel))
+      #print(i) #prints line number of csv file
+      #print(currTime, str(currLevel),str('%+d' % diffLevel)) #redundant
       #prevLevel = currLevel # not needed for lookAhead
+      print('Ahead: (1)Levels (2)Diffs (3)Lights')
       nextLevels = []
       for j in range(1,9):
         nextLevels.append(int(nap_list[i+j][5]))
