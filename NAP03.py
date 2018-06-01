@@ -93,15 +93,15 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
 
 def setLights(levelLightsFull):
   blt.clear()
-  for i in levelLightsFull:
-    if i == '+':
+  for i in pixels:
+    if levelLightsFull[i] == '+':
       blt.set_pixel(i,*rise)
-    elif i == '-':
+    elif levelLightsFull[i] == '-':
       blt.set_pixel(i,*fall)
-    elif i == '=':
+    elif levelLightsFull[i] == '=':
       blt.set_pixel(i,*same)
   blt.show()
-  
+
 '''
 def noPhat():
   while True:
