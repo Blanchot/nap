@@ -9,8 +9,8 @@
 import csv
 import requests
 import time
-import blinkt
-import microdotphat
+import blinkt as blt
+import microdotphat as mdp
 #from microdotphat import write_string, clear, show
  
 
@@ -21,7 +21,7 @@ nextLevels = []
 interval_List = (0,10,20,30,40,50)
 
 # for Blinkt brightness, rgb tuples and pixel list
-blinkt.set_brightness(0.04)
+blt.set_brightness(0.04)
 rise = (0,8,0)
 fall = (32,0,0)
 same = (0,0,192)
@@ -87,9 +87,21 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
     elif i == 0:
       levelLightsFull.append('=')
   print(levelLightsFull)
+  setLights(levelLightsFull)
   # LEVEL LIGHTS MINIMAL
   #levelLightsMin = []
 
+def setLights(levelLightsFull):
+  blt.clear()
+  for i in levelLightsFull:
+    if i == '+':
+      blt.set_pixel(i,*rise)
+    elif i == '-':
+      blt.set_pixel(i,*fall)
+    elif i == '=':
+      blt.set_pixel(i,*same)
+  blt.show()
+  
 '''
 def noPhat():
   while True:
