@@ -4,12 +4,15 @@
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
 # Changed delimiter from ',' to ';'
 
+#NOTE: NEED TO DIFFERENTIATE BETWEEN MICRODOTPHAT AND BLINKT METHODS
+
 import csv
 import requests
 import time
 import blinkt
 import microdotphat
 #from microdotphat import write_string, clear, show
+ 
 
 csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3'
 
@@ -18,7 +21,7 @@ nextLevels = []
 interval_List = (0,10,20,30,40,50)
 
 # for Blinkt brightness, rgb tuples and pixel list
-set_brightness(0.04)
+blinkt.set_brightness(0.04)
 rise = (0,8,0)
 fall = (32,0,0)
 same = (0,0,192)
