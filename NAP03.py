@@ -143,9 +143,9 @@ def withPhat():
           print(currTime, str(currLevel),str('%+d' % diffLevel))
           # Microdot Phat code follows
           display = str(currLevel) + str('%+d' % diffLevel)
-          microdotphat.clear()
-          microdotphat.write_string(display, kerning=False)
-          microdotphat.show()
+          mdp.clear()
+          mdp.write_string(display, kerning=False)
+          mdp.show()
           lookAhead(nap_list,currTime) #send nap_list to lookAhead
         
       time.sleep(65) # waits a bit more than a minute
