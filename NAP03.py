@@ -1,4 +1,5 @@
-# NAP_3 b3 (first test incorporating blinkt lights)
+# NAP_3 b4 (tests incorporating blinkt lights)
+# b4 changes 'same' change to include a change of 1 
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -79,6 +80,7 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
   print(levelDiffs)
   # LEVEL LIGHTS FULL (+,-,=)
   levelLightsFull = []
+  '''
   for i in levelDiffs:
     if i > 0:
       levelLightsFull.append('+')
@@ -86,6 +88,16 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
       levelLightsFull.append('-')
     elif i == 0:
       levelLightsFull.append('=')
+  '''
+  # changed same (or stagnant parameters)
+  for i in levelDiffs:
+    if i > 1:
+      levelLightsFull.append('+')
+    elif i < 1:
+      levelLightsFull.append('-')
+    elif i == 0 or i == 1:
+      levelLightsFull.append('=')
+  
   print(levelLightsFull)
   setLights(levelLightsFull)
   # LEVEL LIGHTS MINIMAL
