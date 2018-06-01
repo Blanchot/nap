@@ -14,6 +14,7 @@ import microdotphat
 csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3'
 
 nap_list = []
+nextLevels = []
 interval_List = (0,10,20,30,40,50)
 
 def getNap():
@@ -36,6 +37,49 @@ def getNap():
     microdotphat.show()
     print('Connection Error')
 
+def lookAhead(nap_list):
+  #global prevLevel # not needed for lookAhead
+  global nextLevels
+  #currTime = input('Current time (hh:mm:ss)? ') #currTime is a str
+  #getNap()
+  for i in range(len(nap_list)):
+    if nap_list[i][1] == currTime:
+      currLevel = int(nap_list[i][5]) #currLevel is an int
+      prevLevel = int(nap_list[i-1][5])
+      #Todo: catch error if prev level in nap_list (Verwachting) is empty
+      #Verwachting column is zeroed when an actual value is measured (Meting)
+      diffLevel = currLevel - prevLevel
+      print(i)
+      print(currTime, str(currLevel),str('%+d' % diffLevel))
+      #prevLevel = currLevel # not needed for lookAhead
+      nextLevels = []
+      for j in range(1,9):
+        nextLevels.append(int(nap_list[i+j][5]))
+      print(nextLevels)
+      compareLevels(currLevel,diffLevel)
+      #return nextLevels
+
+def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current - last
+  global nextLevels
+  # LEVEL DIFFS IN DIGITS
+  levelDiffs = [nextLevels[0]-currLevel] #start list with diff between next - current
+  for i in range(1,8):
+    levelDiffs.append(nextLevels[i]-nextLevels[i-1])
+  print(levelDiffs)
+  # LEVEL LIGHTS FULL (+,-,=)
+  levelLightsFull = []
+  for i in levelDiffs:
+    if i > 0:
+      levelLightsFull.append('+')
+    elif i < 0:
+      levelLightsFull.append('-')
+    elif i == 0:
+      levelLightsFull.append('=')
+  print(levelLightsFull)
+  # LEVEL LIGHTS MINIMAL
+  #levelLightsMin = []
+
+'''
 def noPhat():
   while True:
     tijd = time.localtime() #create a struct_time object
@@ -55,6 +99,7 @@ def noPhat():
           print(currTime, str(currLevel),str('%+d' % diffLevel))
       time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
+'''
 
 def withPhat():
   while True:
@@ -78,6 +123,8 @@ def withPhat():
           microdotphat.clear()
           microdotphat.write_string(display, kerning=False)
           microdotphat.show()
+          lookAhead(nap_list) #send nap_list to lookAhead
+        
       time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
 
