@@ -37,7 +37,7 @@ def getNap():
     microdotphat.show()
     print('Connection Error')
 
-def lookAhead(nap_list):
+def lookAhead(nap_list,currTime):
   #global prevLevel # not needed for lookAhead
   global nextLevels
   #currTime = input('Current time (hh:mm:ss)? ') #currTime is a str
@@ -123,7 +123,7 @@ def withPhat():
           microdotphat.clear()
           microdotphat.write_string(display, kerning=False)
           microdotphat.show()
-          lookAhead(nap_list) #send nap_list to lookAhead
+          lookAhead(nap_list,currTime) #send nap_list to lookAhead
         
       time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
