@@ -1,5 +1,4 @@
-# NAP_3 b4 (tests incorporating blinkt lights)
-# b4 changes 'same' change to include a change of 1 
+# NAP_3 b6 (small printing changes)
 # Uses 'expected' data rather than 'measured'
 # Based originally on script from here:
 # https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
@@ -63,7 +62,7 @@ def lookAhead(nap_list,currTime):
       #print(i) #prints line number of csv file
       #print(currTime, str(currLevel),str('%+d' % diffLevel)) #redundant
       #prevLevel = currLevel # not needed for lookAhead
-      print('Ahead: (1)Levels (2)Diffs (3)Lights')
+      #print('Ahead: (1)Levels (2)Diffs (3)Lights')
       nextLevels = []
       for j in range(1,9):
         nextLevels.append(int(nap_list[i+j][5]))
@@ -98,7 +97,7 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
     elif i == 0 or i == 1 or i == -1:
       levelLightsFull.append('=')
   
-  print(levelLightsFull)
+  #print(levelLightsFull) #prints +, - and =
   setLights(levelLightsFull)
   # LEVEL LIGHTS MINIMAL
   #levelLightsMin = []
