@@ -144,7 +144,7 @@ def withPhat():
           microdotphat.clear()
           microdotphat.write_string('IndEr2', kerning=False)
           microdotphat.show()
-          logging.info('IndexError 2 in withPhat'))
+          logging.info('IndexError 2 in withPhat')
           print('IndexError 2 in withPhat')
           time.sleep(65) #not sure how long to wait
           continue #does this work here?
