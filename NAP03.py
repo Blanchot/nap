@@ -1,27 +1,28 @@
-# NAP_3 b6 (small printing changes)
+# NAP_3 b7 (added try_except in withPhat and logging for errors)
 # Uses 'expected' data rather than 'measured'
-# Based originally on script from here:
-# https://stackoverflow.com/questions/35371043/use-python-requests-to-download-csv
-# Changed delimiter from ',' to ';'
-
-#NOTE: NEED TO DIFFERENTIATE BETWEEN MICRODOTPHAT AND BLINKT METHODS
+# Note because blinkt and microdotphat share methods with the same name we use their full names
 
 import csv
 import requests
 import time
-import blinkt as blt
-import microdotphat as mdp
-#from microdotphat import write_string, clear, show
- 
+import blinkt
+import microdotphat
 
+import logging
+format_string = '%(levelname)s: %(asctime)s: %(message)s'
+logging.basicConfig(level=logging.INFO, filename='errors.log', format=format_string)
+
+logging.info('Logging Start')
+
+# Rijswaterstaat water level data:
 csv_url = 'https://waterinfo.rws.nl/api/Download/CSV?expertParameter=Waterhoogte___20Oppervlaktewater___20t.o.v.___20Normaal___20Amsterdams___20Peil___20in___20cm&locationSlug=Rotterdam(ROTT)&timehorizon=-6,3'
 
 nap_list = []
 nextLevels = []
-interval_List = (0,10,20,30,40,50)
+interval_List = (0,10,20,30,40,50) #checks
 
 # for Blinkt brightness, rgb tuples and pixel list
-blt.set_brightness(0.04)
+blinkt.set_brightness(0.04)
 rise = (0,8,0)
 fall = (32,0,0)
 same = (0,0,192)
@@ -38,14 +39,14 @@ def getNap():
       return nap_list
   except IndexError:
     microdotphat.clear()
-    microdotphat.write_string('IndErr', kerning=False)
+    microdotphat.write_string('IndEr1', kerning=False)
     microdotphat.show()
-    print('Index Error')
+    print('IndexError 1: getNAP')
   except ConnectionError:
     microdotphat.clear()
     microdotphat.write_string('ConErr', kerning=False)
     microdotphat.show()
-    print('Connection Error')
+    print('ConnectionError: getNAP')
 
 def lookAhead(nap_list,currTime):
   #global prevLevel # not needed for lookAhead
@@ -103,18 +104,19 @@ def compareLevels(currLevel,diffLevel): #diffLevel here is diff between current 
   #levelLightsMin = []
 
 def setLights(levelLightsFull):
-  blt.clear()
+  blinkt.clear()
   for i in pixels:
     if levelLightsFull[i] == '+':
-      blt.set_pixel(i,*rise)
+      blinkt.set_pixel(i,*rise)
     elif levelLightsFull[i] == '-':
-      blt.set_pixel(i,*fall)
+      blinkt.set_pixel(i,*fall)
     elif levelLightsFull[i] == '=':
-      blt.set_pixel(i,*same)
-  blt.show()
+      blinkt.set_pixel(i,*same)
+  blinkt.show()
 
-'''
-def noPhat():
+
+# New code with try/except block
+def withPhat():
   while True:
     tijd = time.localtime() #create a struct_time object
     if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
@@ -123,18 +125,38 @@ def noPhat():
       
       getNap() #get and set current nap_list
       # walk through it searching match with currTime nap_list[i][1]
-      # for i in nap_list: doesn't work in this case (because I need the index number?):
+      # for i in nap_list: doesn't work in this case (because I need the index number?)
       for i in range(len(nap_list)):
-        if nap_list[i][1] == currTime:
-          currLevel = int(nap_list[i][5]) #currLevel is an int
-          prevLevel = int(nap_list[i-1][5])
-          diffLevel = currLevel - prevLevel
-          #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
-          print(currTime, str(currLevel),str('%+d' % diffLevel))
-      time.sleep(65) # waits a bit more than a minute
-    time.sleep(5)
-'''
+        try:
+          if nap_list[i][1] == currTime:
+            currLevel = int(nap_list[i][5]) #currLevel is an int
+            prevLevel = int(nap_list[i-1][5])
+            diffLevel = currLevel - prevLevel
+            #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
+            print(currTime, str(currLevel),str('%+d' % diffLevel))
+            # Microdot Phat code follows
+            display = str(currLevel) + str('%+d' % diffLevel)
+            microdotphat.clear()
+            microdotphat.write_string(display, kerning=False)
+            microdotphat.show()
+            lookAhead(nap_list,currTime) #send nap_list to lookAhead
+        except IndexError:
+          microdotphat.clear()
+          microdotphat.write_string('IndEr2', kerning=False)
+          microdotphat.show()
+          logging.info('IndexError 2 in withPhat'))
+          print('IndexError 2 in withPhat')
+          time.sleep(65) #not sure how long to wait
+          continue #does this work here?
+        
+    time.sleep(65) # waits a bit more than a minute
+  time.sleep(5)
 
+
+withPhat()
+
+
+''' # Code without try/except block
 def withPhat():
   while True:
     tijd = time.localtime() #create a struct_time object
@@ -154,43 +176,47 @@ def withPhat():
           print(currTime, str(currLevel),str('%+d' % diffLevel))
           # Microdot Phat code follows
           display = str(currLevel) + str('%+d' % diffLevel)
-          mdp.clear()
-          mdp.write_string(display, kerning=False)
-          mdp.show()
+          microdotphat.clear()
+          microdotphat.write_string(display, kerning=False)
+          microdotphat.show()
           lookAhead(nap_list,currTime) #send nap_list to lookAhead
         
       time.sleep(65) # waits a bit more than a minute
     time.sleep(5)
 
-#noPhat()
-withPhat()
+'''
 
 '''
-while True:
-  try:
-    with requests.Session() as s:
-      download = s.get(csv_url)
-      decoded_content = download.content.decode('utf-8')
-      cr = csv.reader(decoded_content.splitlines(), delimiter=';')
-      my_list = list(cr)
-    if my_list[29][1] != updatetime and my_list[29][4] != '': #test time changed and level not empty
-      difflevel = int(my_list[29][4]) - prevlevel #new code to compare and show rise or fall of level
-      display = (my_list[29][4] + str('%+d' % difflevel)) #+d formatting for positive and neg numbers 
-      clear()
-      write_string(display, kerning=False)
-      show()
-			updatetime = my_list[29][1]
-			prevlevel = int(my_list[29][4]) #new code to compare and show rise or fall of level
-		time.sleep(300) # waits 5 minutes
-	except IndexError:
-		clear()
-		write_string('IndErr', kerning=False)
-		show()
-		time.sleep(300)
-	#except ConnectionError:
-		#clear()
-		#write_string('ConErr', kerning=False)
-		#show()
-		#time.sleep(300)
+Latest Error 2018.06.22
 
+Traceback (most recent call last):
+ 	File "NAP03.py", line 166, in <module>
+ 		withPhat()
+	File "NAP03.py", line 149, in withPhat
+		if nap_list[i][1] == currTime:
+IndexError: list index out of range
+
+'''
+
+'''
+# No phat code (keep around for testing in Pythonista)
+def noPhat():
+  while True:
+    tijd = time.localtime() #create a struct_time object
+    if tijd[4] in interval_List: #and check if the number of minutes is in the interval_List
+      currTime = time.asctime()[11:16] #if yes create an hour and minute string using .asctime
+      currTime = currTime +':00' #add the zeros
+      
+      getNap() #get and set current nap_list
+      # walk through it searching match with currTime nap_list[i][1]
+      # for i in nap_list: doesn't work in this case (because I need the index number?):
+      for i in range(len(nap_list)):
+        if nap_list[i][1] == currTime:
+          currLevel = int(nap_list[i][5]) #currLevel is an int
+          prevLevel = int(nap_list[i-1][5])
+          diffLevel = currLevel - prevLevel
+          #print(str('%+d' % diffLevel)) #+d formatting for pos and neg numbers
+          print(currTime, str(currLevel),str('%+d' % diffLevel))
+      time.sleep(65) # waits a bit more than a minute
+    time.sleep(5)
 '''
