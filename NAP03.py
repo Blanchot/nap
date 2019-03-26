@@ -149,7 +149,7 @@ def withPhat():
           time.sleep(65) #not sure how long to wait
           continue #does this work here?
         
-    time.sleep(65) # waits a bit more than a minute
+    time.sleep(65) # waits a bit more than a minute to escape if = true
   time.sleep(5)
 
 
